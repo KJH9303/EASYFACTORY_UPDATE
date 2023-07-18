@@ -11,11 +11,7 @@ public class FebService {
 	public FebService(FebDAO febDAO) {
 		this.febDAO = febDAO;
 	}
-	/*
-	public JSONArray selectData() {
-        return febDAO.selectData();
-    }
-	*/
+
 	public JSONArray selectDataHiredate(String tableName, String startDate, String endDate) {
         return febDAO.selectDataHiredate(tableName, startDate, endDate);
     }

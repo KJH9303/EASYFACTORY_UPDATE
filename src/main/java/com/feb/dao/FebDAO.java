@@ -28,7 +28,6 @@ public class FebDAO {
 	@Autowired
 	FebIndexDAO febIndexDAO;
 
-    // @Autowired
     public FebDAO(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -50,28 +49,6 @@ public class FebDAO {
          }
     }
 
- 	/* Select    
-    public JSONArray selectData() {
-        String query = "SELECT * FROM feb1";
-        return jdbcTemplate.query(query, rs -> {
-            JSONArray jsonArray = new JSONArray();
-            while (rs.next()) {
-                JSONObject row = new JSONObject();
-                row.put("opratio", rs.getDouble("opratio"));
-                row.put("temp", rs.getInt("temp"));
-                row.put("tr", rs.getInt("tr"));
-                row.put("fal", rs.getInt("fal"));
-                row.put("stock", rs.getInt("stock"));
-                row.put("costs", rs.getInt("costs"));
-                row.put("usingratio", rs.getDouble("usingratio"));
-                row.put("hiredate", rs.getDate("hiredate").toString());
-                jsonArray.add(row);
-            }
-            return jsonArray;
-        });
-    }
-    */
-    
  	// Select    
     public JSONArray selectDataHiredate(String tableName, String startDate, String endDate) {
     	final HashMap<String, String> tables = new HashMap<>();
@@ -159,11 +136,9 @@ public class FebDAO {
 
             int temp = random.nextInt(15) + 1; 			// 온도
             temp = Math.max(0, Math.min(15, temp));
-            int tr = random.nextInt(6001) + 7000;		// 정품수량
-            int stock;
+            double stock;
             
-            // 공정별 연평균 kw기준치  + 전기사용량
-            // double usingratio = selectFebIndexVO(tableName);
+            // 공정별 전기사용량 기준치  + 전기사용량
             double randomUsingratio = Math.round(random.nextDouble() * 20 * 20.0) / 20.0;
             double usingRatio = febIndexDAO.selectFebIndex_Elec_VO(tableName) + ((randomUsingratio > 10.0) ? randomUsingratio - 10.0 : -randomUsingratio);  
             
@@ -175,23 +150,20 @@ public class FebDAO {
             double opratio = febIndexDAO.selectFebIndex_production_VO(tableName) + ((randomOpratio > 10.0) ? randomOpratio - 10.0 : -randomOpratio);
             
             // 공정별 난이도대비 불량품 (0부터 20까지의 수 중에 랜덤값 생성)
-            double randomFal = Math.round(random.nextDouble() * 20 * 20.0) / 20.0;;
+            double randomFal = Math.round(random.nextDouble() * 20 * 20.0) / 20.0;
             double fal = febIndexDAO.selectFebindex_view_Difficulty(tableName) + ((randomFal > 10.0) ? randomFal - 10.0 : -randomFal);
             
-            stock = tr - (int)fal;	// 재고
+            // 공정별 전기사용량 기준치 + 생산량
+            double randomTr = Math.round(random.nextDouble() * 20 * 20.0) / 20.0;
+            double tr = febIndexDAO.selectFebIndex_Elec_VO(tableName) * (1000) + ((randomTr > 10.0) ? randomTr - 1000.0 : -randomTr);
+
+            stock = (double)tr - (double)fal;	// 재고
             
-            System.out.printf("$$$$ FebDAO.updateTable(%s) : usingratio=(%f)(%f) \n", tableName, usingRatio, randomUsingratio);
-            System.out.printf("$$$$ FebDAO.updateTable(%s) : costs=(%f)(%f) \n", tableName, costs, usingRatio);
-            System.out.printf("$$$$ FebDAO.updateTable(%s) : opratio=(%f)(%f) \n", tableName, opratio, randomOpratio);
-            System.out.printf("$$$$ FebDAO.updateTable(%s) : fal=(%f)(%f) \n", tableName, fal, randomFal);
-            		
             LocalDateTime currentDateTime = dateTime.plusDays(i);
             java.sql.Date currentDate = java.sql.Date.valueOf(currentDateTime.toLocalDate());
-            System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"+currentDate);
 
             try {
                 String SQL = "UPDATE " + tableName + " SET opratio = ?, temp = ?, tr = ?, fal = ?, stock = ?, costs = ?, usingratio = ? WHERE hiredate = ?";
-                System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhh"+ opratio +"dd"+temp +"dd"+ tr +"dd"+fal +"dd"+stock +"dd"+costs +"dd"+usingRatio +"dd"+currentDate);
                 int result = jdbcTemplate.update(SQL, opratio, temp, tr, fal, stock, costs, usingRatio, currentDate);
 
                 System.out.println("[" + tableName.toUpperCase() + " 테이블의 업데이트 작업이 완료되었습니다.]");
