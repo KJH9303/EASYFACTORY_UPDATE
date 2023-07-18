@@ -12,10 +12,6 @@ public class FebService {
 		this.febDAO = febDAO;
 	}
 
-	public JSONArray selectDataHiredate(String tableName, String startDate, String endDate) {
-        return febDAO.selectDataHiredate(tableName, startDate, endDate);
-    }
-	
 	public void updateTables() {
 		febDAO.insertTable("feb1");
 		febDAO.insertTable("feb2");
@@ -50,10 +46,4 @@ public class FebService {
 	        }
         }
     }
-        
-    public String getRandomDefect() throws Exception {
-		String result = febDAO.getRandomDefect();
-		return result;
-	}
-
 }
