@@ -20,7 +20,6 @@ public class FebIndexDAO {
     public double selectFebIndex_Elec_VO(String feb) {
         String query = "SELECT elec_using FROM feb_index_view_elec WHERE process_feb=?";
         Double val = jdbcTemplate.queryForObject(query, new Object[] {feb},	Double.class);
-        // System.out.printf("#### FebIndexDAO.selectFebIndexVO(%s) : elec_using(%f)\n", feb, val);
         
         return val;
     }
