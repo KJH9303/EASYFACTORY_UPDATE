@@ -86,7 +86,7 @@ public class FebDAO {
             
             // 공정별 난이도대비 불량품 (0부터 20까지의 수 중에 랜덤값 생성)
             double randomFal = Math.round(random.nextDouble() * 20 * 20.0) / 20.0;
-            double fal = febIndexDAO.selectFebindex_view_Difficulty(tableName) + ((randomFal > 10.0) ? randomFal - 10.0 : -randomFal);
+            double fal = febIndexDAO.selectFebindex_view_Difficulty(tableName) * (100) + ((randomFal > 10.0) ? randomFal - 10.0 : -randomFal);
             
             // 공정별 전기사용량 기준치 + 생산량
             double randomTr = Math.round(random.nextDouble() * 20 * 20.0) / 20.0;
