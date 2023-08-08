@@ -22,11 +22,9 @@ public class FebService {
 		febDAO.insertTable("feb7");
 		febDAO.insertTable("feb8");
 		
-		System.out.println("FebService : updateTables 찍힘");
 	}
 	
 	public void startUpdateFeb(String run) {
-		System.out.println("■■■■■■■■■■ startUpdateFeb. ■■■■■■■■■■");
         while (run.equals("run")) {
         	febDAO.updateTable("feb1");
         	febDAO.updateTable("feb2");
