@@ -22,6 +22,7 @@ public class UpdateMain {
             febDAO.updateTable("feb7");
             febDAO.updateTable("feb8");
             System.out.println("■■■■■■■■■■ 모든 공정의 데이터 UPDATE작업이 완료되었습니다. ■■■■■■■■■■");
+            
 
             try {
                 Thread.sleep(3000);

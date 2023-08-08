@@ -12,7 +12,6 @@ public class InsertMain {
     	
         FebDAO febDAO = ctx.getBean(FebDAO.class);
 
-        // 테이블 업데이트 실행
         febDAO.insertTable("feb1");
         febDAO.insertTable("feb2");
         febDAO.insertTable("feb3");

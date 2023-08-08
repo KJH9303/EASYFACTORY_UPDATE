@@ -40,7 +40,7 @@ public class FebIndexDAO {
         return val;
     }
     
-    // 생산량 뷰
+    // 난이도 뷰
     public double selectFebindex_view_Difficulty(String feb) {
         String query = "SELECT Difficulty FROM feb_index_view_Difficulty WHERE process_feb=?";
         Double val = jdbcTemplate.queryForObject(query, new Object[] {feb},	Double.class);
